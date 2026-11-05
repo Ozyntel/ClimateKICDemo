@@ -1,0 +1,551 @@
+{
+  "schema": "ozy-lead-case",
+  "version": 1,
+  "id": "lead-test-alpha",
+  "internalLabel": "TEST FIXTURE ALPHA",
+  "createdAt": "2026-01-01T00:00:00.000Z",
+  "updatedAt": "2026-01-01T00:00:00.000Z",
+  "presentation": {
+    "orgType": "company",
+    "theme": ""
+  },
+  "organisation": {
+    "name": "Test Organisation Alpha",
+    "overview": "Synthetic test fixture used only by automated tests.",
+    "sector": "Test sector",
+    "place": "Test place",
+    "size": "51-200",
+    "context": "",
+    "visual": "organisation",
+    "state": "operating"
+  },
+  "respondent": {
+    "role": "Test role",
+    "accountableFor": "",
+    "goals": ""
+  },
+  "decision": {
+    "question": "Should Alpha test option one or option two first?",
+    "challenge": "Synthetic challenge.",
+    "objectives": [
+      "Objective one"
+    ],
+    "timeHorizon": "12 months",
+    "inScope": [
+      "Scope item"
+    ],
+    "outOfScope": [],
+    "workingWell": [
+      "Working item"
+    ],
+    "underway": [],
+    "whereStalls": ""
+  },
+  "intake": {
+    "constraints": {
+      "capacityLimits": true,
+      "governanceBottlenecks": false,
+      "decisionLatency": false,
+      "unclearOwnership": false
+    },
+    "constraintNotes": "",
+    "external": {
+      "marketVolatility": "Medium",
+      "demandOutlook": "",
+      "regulatoryPressure": "",
+      "supplyDisruptionRisk": "",
+      "environmentalFactor": ""
+    },
+    "omitSections": [
+      "world"
+    ]
+  },
+  "numbers": [
+    {
+      "id": "n-cash",
+      "label": "Alpha cash",
+      "value": "100",
+      "unit": "k€",
+      "asOf": "2026-01-01",
+      "evidence": "observed",
+      "sourceIds": [
+        "T-01"
+      ],
+      "note": ""
+    },
+    {
+      "id": "n-staff",
+      "label": "Alpha staff",
+      "value": "",
+      "unit": "people",
+      "asOf": "",
+      "evidence": "",
+      "sourceIds": [],
+      "note": ""
+    },
+    {
+      "id": "n-load",
+      "label": "Alpha load",
+      "value": "5",
+      "unit": "units",
+      "asOf": "2026-01-01",
+      "evidence": "assumption",
+      "sourceIds": [],
+      "note": ""
+    }
+  ],
+  "elements": [
+    {
+      "id": "el-site",
+      "label": "Alpha Site",
+      "visual": "facility",
+      "state": "operating",
+      "overlays": [],
+      "layer": "",
+      "near": "",
+      "note": "Test site.",
+      "holder": "",
+      "evidence": "observed",
+      "confidence": "high",
+      "confidenceWhy": "",
+      "sourceIds": [
+        "T-01"
+      ],
+      "measure": {
+        "value": "",
+        "unit": "",
+        "asOf": ""
+      },
+      "portfolio": {
+        "tier": "",
+        "health": "",
+        "status": ""
+      }
+    },
+    {
+      "id": "el-supplier",
+      "label": "Alpha Supplier",
+      "visual": "supplier",
+      "state": "qualification-pending",
+      "overlays": [
+        "possible-risk"
+      ],
+      "layer": "",
+      "near": "",
+      "note": "",
+      "holder": "",
+      "evidence": "assumption",
+      "confidence": "low",
+      "confidenceWhy": "Test",
+      "sourceIds": [],
+      "measure": {
+        "value": "",
+        "unit": "",
+        "asOf": ""
+      },
+      "portfolio": {
+        "tier": "",
+        "health": "",
+        "status": ""
+      }
+    },
+    {
+      "id": "el-rule",
+      "label": "Alpha Rulebook",
+      "visual": "regulation",
+      "state": "unknown",
+      "overlays": [],
+      "layer": "",
+      "near": "",
+      "note": "",
+      "holder": "",
+      "evidence": "",
+      "confidence": "unknown",
+      "confidenceWhy": "",
+      "sourceIds": [],
+      "measure": {
+        "value": "",
+        "unit": "",
+        "asOf": ""
+      },
+      "portfolio": {
+        "tier": "",
+        "health": "",
+        "status": ""
+      }
+    },
+    {
+      "id": "el-heat",
+      "label": "Alpha Heat",
+      "visual": "heat",
+      "state": "warmer",
+      "overlays": [],
+      "layer": "",
+      "near": "",
+      "note": "",
+      "holder": "",
+      "evidence": "observed",
+      "confidence": "medium",
+      "confidenceWhy": "",
+      "sourceIds": [
+        "T-01"
+      ],
+      "measure": {
+        "value": "31",
+        "unit": "°C",
+        "asOf": "2026-07"
+      },
+      "portfolio": {
+        "tier": "",
+        "health": "",
+        "status": ""
+      }
+    },
+    {
+      "id": "el-culture",
+      "label": "Alpha Culture",
+      "visual": "culture",
+      "state": "described",
+      "overlays": [],
+      "layer": "",
+      "near": "el-site",
+      "note": "",
+      "holder": "Alpha staff survey",
+      "evidence": "stakeholder",
+      "confidence": "medium",
+      "confidenceWhy": "",
+      "sourceIds": [
+        "T-02"
+      ],
+      "measure": {
+        "value": "",
+        "unit": "",
+        "asOf": ""
+      },
+      "portfolio": {
+        "tier": "",
+        "health": "",
+        "status": ""
+      }
+    },
+    {
+      "id": "el-problem",
+      "label": "Alpha Backlog",
+      "visual": "active-problem",
+      "state": "current",
+      "overlays": [],
+      "layer": "",
+      "near": "",
+      "note": "",
+      "holder": "",
+      "evidence": "observed",
+      "confidence": "high",
+      "confidenceWhy": "",
+      "sourceIds": [
+        "T-02"
+      ],
+      "measure": {
+        "value": "",
+        "unit": "",
+        "asOf": ""
+      },
+      "portfolio": {
+        "tier": "",
+        "health": "",
+        "status": ""
+      }
+    }
+  ],
+  "teams": [
+    {
+      "id": "team-ops",
+      "name": "Alpha Ops",
+      "purpose": "Run the test",
+      "headcount": 12,
+      "roles": [
+        "Ops lead",
+        "Operator"
+      ],
+      "tier": null,
+      "views": [
+        {
+          "text": "We need stable plans",
+          "holder": "Alpha Ops (survey)",
+          "evidence": "stakeholder",
+          "sourceIds": [
+            "T-02"
+          ]
+        }
+      ],
+      "visual": "team",
+      "state": "active",
+      "overlays": [
+        "workload"
+      ]
+    },
+    {
+      "id": "team-sales",
+      "name": "Alpha Sales",
+      "purpose": "Sell the test",
+      "headcount": null,
+      "roles": [],
+      "tier": null,
+      "views": [],
+      "visual": "team",
+      "state": "unknown",
+      "overlays": []
+    }
+  ],
+  "relationships": [
+    {
+      "id": "r1",
+      "from": "el-supplier",
+      "to": "org",
+      "type": "flow",
+      "label": "Supplies parts",
+      "state": "flowing",
+      "tone": "neutral",
+      "frequency": "high",
+      "evidence": "observed",
+      "sourceIds": [],
+      "perspectives": []
+    },
+    {
+      "id": "r2",
+      "from": "team-ops",
+      "to": "team-sales",
+      "type": "tension",
+      "label": "Different timelines",
+      "state": "mild",
+      "tone": "tension",
+      "frequency": "unknown",
+      "evidence": "stakeholder",
+      "sourceIds": [],
+      "perspectives": [
+        {
+          "text": "Sales promise early",
+          "holder": "Alpha Ops",
+          "evidence": "stakeholder",
+          "sourceIds": []
+        }
+      ]
+    },
+    {
+      "id": "r3",
+      "from": "team-ops",
+      "to": "el-site",
+      "type": "handover",
+      "label": "Shift hand-over",
+      "state": "clear",
+      "tone": "neutral",
+      "frequency": "low",
+      "evidence": "observed",
+      "sourceIds": [],
+      "perspectives": []
+    }
+  ],
+  "sources": [
+    {
+      "id": "T-01",
+      "title": "Alpha test report one",
+      "fileName": "t-01.md",
+      "date": "2026-02-01",
+      "docType": "Test doc",
+      "scope": "Synthetic scope one",
+      "owner": "Test owner",
+      "excerpt": "Excerpt one",
+      "fullText": "# Test report one\nSynthetic.",
+      "reading": {
+        "extracted": [
+          "Read one"
+        ],
+        "changes": [
+          "Change one"
+        ],
+        "affected": [
+          "Alpha Ops"
+        ],
+        "uncertainties": [
+          "Uncertain one"
+        ]
+      },
+      "updates": [
+        {
+          "numberId": "n-cash",
+          "value": "90",
+          "asOf": "2026-02-01"
+        }
+      ],
+      "signals": [
+        "Alpha signal from T-01"
+      ]
+    },
+    {
+      "id": "T-02",
+      "title": "Alpha test report two",
+      "fileName": "t-02.md",
+      "date": "2026-02-05",
+      "docType": "Test doc",
+      "scope": "Synthetic scope two",
+      "owner": "",
+      "excerpt": "",
+      "fullText": "",
+      "reading": {
+        "extracted": [],
+        "changes": [],
+        "affected": [],
+        "uncertainties": []
+      },
+      "updates": [
+        {
+          "numberId": "n-cash",
+          "value": "95",
+          "asOf": "2026-02-05"
+        }
+      ],
+      "signals": []
+    }
+  ],
+  "findings": [
+    {
+      "id": "f1",
+      "text": "Alpha baseline signal",
+      "kind": "signal",
+      "evidence": "observed",
+      "confidence": "medium",
+      "confidenceWhy": "",
+      "sourceIds": [
+        "T-01"
+      ],
+      "about": "el-site"
+    },
+    {
+      "id": "f2",
+      "text": "Alpha finding for the brief",
+      "kind": "finding",
+      "evidence": "assumption",
+      "confidence": "low",
+      "confidenceWhy": "",
+      "sourceIds": [],
+      "about": ""
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "a1",
+      "text": "Alpha assumption",
+      "basis": "Test basis",
+      "sourceIds": []
+    }
+  ],
+  "missingInfo": [
+    {
+      "id": "m1",
+      "title": "Alpha missing item",
+      "why": "Test why",
+      "sharpens": "Test",
+      "status": "missing"
+    }
+  ],
+  "limitations": [
+    "Alpha case-specific limitation"
+  ],
+  "notices": [],
+  "pathways": [
+    {
+      "id": "pw-1",
+      "title": "Alpha option one",
+      "summary": "Option one summary",
+      "idea": "Idea one",
+      "horizon": "6 months",
+      "cost": "Test cost",
+      "needs": [
+        "Need one"
+      ],
+      "conditions": [],
+      "interventions": [
+        "Intervention one"
+      ],
+      "watch": "Watch one",
+      "sourceIds": [
+        "T-01"
+      ],
+      "wins": [
+        {
+          "label": "Win one",
+          "near": "el-site",
+          "from": 2,
+          "until": null
+        }
+      ],
+      "risks": [
+        {
+          "label": "Risk one",
+          "near": "team-ops",
+          "from": 0,
+          "until": null
+        },
+        {
+          "label": "Risk two",
+          "near": "el-supplier",
+          "from": 1,
+          "until": 6
+        }
+      ],
+      "effects": [
+        {
+          "target": "el-site",
+          "label": "Alpha effect one",
+          "tone": "risk",
+          "direction": ""
+        },
+        {
+          "target": "team-ops",
+          "label": "Alpha effect two",
+          "tone": "benefit",
+          "direction": "increase"
+        }
+      ]
+    },
+    {
+      "id": "pw-2",
+      "title": "Alpha option two",
+      "summary": "",
+      "idea": "Idea two",
+      "horizon": "",
+      "cost": "",
+      "needs": [],
+      "conditions": [],
+      "interventions": [],
+      "watch": "",
+      "sourceIds": [],
+      "wins": [],
+      "risks": [],
+      "effects": []
+    }
+  ],
+  "outcomeEstimate": {
+    "question": "Alpha outcome question",
+    "basis": "Test basis",
+    "values": {
+      "pw-1": 40
+    }
+  },
+  "scenarios": [
+    {
+      "id": "sc-1",
+      "question": "What if Alpha supplier is late?",
+      "effects": [
+        {
+          "target": "el-supplier",
+          "label": "Alpha late",
+          "tone": "risk",
+          "direction": ""
+        }
+      ],
+      "assumptions": [
+        "Test assumption"
+      ]
+    }
+  ]
+}

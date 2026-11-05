@@ -1,0 +1,60 @@
+### 2) Data model additions
+
+Extend `Project` with:
+
+- `artefactText?: string`
+- `extraction?: ExtractionResult` (defined below)
+- `llmMode?: "stub" | "llm"` (default to `"llm"` but keep stub fallback)
+
+Define `ExtractionResult` type:
+
+- `entities: Array<{ id: string; label: string; kind: "team"|"role"|"process"|"initiative"|"constraint"; evidence: string; confidence: "High"|"Medium"|"Low" }>` (max 12)
+- `gapsContradictions: Array<{ id: string; text: string; evidence?: string }>` (max 8)
+- `signals: Array<{ id: string; name: string; whyItMatters: string }>` (max 8)
+- `summary: string` (5–8 bullets or short paragraph)
+- `rawModel?: string` (optional)
+
+### 3) Add a secure API route for the LLM
+
+Create an API route using Next.js App Router:
+
+- `app/api/extract/route.ts`
+
+It should:
+
+- Accept POST JSON: `{ orgName, questionnaireSummary, artefactText }`
+- Call an LLM provider via server-side fetch (do NOT expose the key client-side)
+- Require environment variable: `OPENAI_API_KEY` (or `ANTHROPIC_API_KEY` if you prefer—pick one and implement it fully)
+- Return strict JSON matching `ExtractionResult`
+
+Add robust JSON handling:
+
+- Use a “return JSON only” system prompt
+- If parsing fails, return `{ ok:false, error:"..." }` and the UI must fall back to stub
+
+### 4) Prompting + schema constraints (anti-hallucination)
+
+In the LLM prompt:
+
+- State: “Only extract facts that are supported by the pasted text. Every entity must include an evidence snippet copied from the text.”
+- Hard limits: max entities 12, max gaps 8, max signals 8.
+- If the text is too vague, return fewer items, not guesses.
+
+### 5) Integrate into diagnostics
+
+Update diagnostics generation flow:
+
+- Add `lib/llmClient.ts` (client-side) to call `/api/extract`
+- On `/upload`, add a button: **“Extract with AI (v1.1)”**
+    - If `artefactText` is empty, disable with message.
+    - Show loading state.
+    - Save `project.extraction` to localStorage.
+    - Then generate diagnostics *using extraction + questionnaire*.
+
+Update `generateDiagnostics(project)`:
+
+- If `project.extraction` exists, weave it into:
+    - baseline diagnosis
+    - hypotheses (reference extracted entities/constraints)
+    - missing info (use extracted gaps/signals)
+    - show an “Evidence” line when possible (use the evidence snippets)

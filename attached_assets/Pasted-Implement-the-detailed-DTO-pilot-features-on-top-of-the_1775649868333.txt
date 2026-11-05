@@ -1,0 +1,209 @@
+Implement the detailed DTO pilot features on top of the existing scaffolded Next.js 14 + TypeScript + Tailwind **App Router** project.
+
+Hard constraints
+
+- Keep **App Router** (`/app`).
+- **No auth, no database, no external integrations**.
+- Persist a single `project` in **browser localStorage** (refresh keeps state).
+- **No real LLM calls** in v1. All “AI” must be **deterministic stub functions** in `lib/stubAi.ts`.
+- Prioritize a working **end-to-end flow** over polish.
+
+## A) Data model (store in localStorage)
+
+Create types in `lib/types.ts` (or similar):
+
+### `Questionnaire`
+
+- `orgName: string`
+- `sector: string`
+- `geography: string`
+- `companySize: "1-50" | "51-200" | "201-1000" | "1001-5000" | "5000+"`
+- `transformationTheme: string`
+- `whereStalls: string`
+- `stakeholders: Array<{ name: string; team?: string; role?: string }>` (3–8 rows)
+- `constraints: { capacityLimits: boolean; governanceBottlenecks: boolean; decisionLatency: boolean; unclearOwnership: boolean; notes?: string }`
+
+### `ArtefactMeta`
+
+- `{ id: string; name: string; size: number; type?: string }` (max 3)
+
+### `Graph`
+
+- `nodes: Array<{ id: string; label: string; kind: "team" | "role" | "process" | "initiative"; summary: string }>`
+- `edges: Array<{ id: string; source: string; target: string; label: string }>`
+    
+    (label examples: “depends on”, “approves”, “handoff”, “provides data to”)
+    
+
+### `Twin`
+
+- `hotspots: Array<{ id: string; title: string; description: string; severity: "Low" | "Medium" | "High" }>` (3–6)
+- `missingSignals: string[]` (3–8)
+- `graph: Graph`
+
+### `Diagnostics`
+
+- `baseline: { optimisingFor: string; whereCoordinationBreaks: string; incentivesGovernance: string }`
+- `hypotheses: Array<{ id: string; title: string; rationale: string; falsifier: string }>` (5–10)
+- `risks: Array<{ id: string; title: string; earlyWarning: string; firstMove: string }>` (3–6)
+- `interventions: Array<{ id: string; title: string; type: "Governance" | "Capability" | "Coordination"; effort: "S" | "M" | "L"; impact: "S" | "M" | "L"; description: string }>` (5–8)
+- `assumptions: Array<{ id: string; text: string; confidence: "High" | "Medium" | "Low" }>` (3–6)
+- `missingInfo: Array<{ id: string; text: string; whyItMatters: string }>` (3–8)
+
+### `Pathway`
+
+- `{ id: string; name: string; intent: string; benefits: string[]; likelyResistance: string[]; measures30d: string[] }` (3 items)
+
+### `Project`
+
+- `questionnaire?: Questionnaire`
+- `profileSummary?: string`
+- `artefacts: ArtefactMeta[]`
+- `twin?: Twin`
+- `diagnostics?: Diagnostics`
+- `pathways?: Pathway[]`
+- `selectedPathwayId?: string`
+
+## B) LocalStorage utilities
+
+Create `lib/projectStore.ts`:
+
+- `loadProject(): Project`
+- `saveProject(project: Project): void`
+- (optional) `updateProject(updater: (p: Project) => Project): Project`
+
+Use one localStorage key: `dto_project_v0`.
+
+## C) Stub AI functions (deterministic, no network)
+
+Implement `lib/stubAi.ts`:
+
+- `generateProfileSummary(q: Questionnaire): string`
+- `generateTwin(q: Questionnaire): Twin`
+- `generateDiagnostics(project: Project): Diagnostics`
+- `generatePathways(d: Diagnostics): Pathway[]`
+
+Determinism requirement:
+
+- Base outputs on questionnaire fields and artefact file names (if present).
+- Do NOT call any external API.
+- Ensure outputs look realistic for sustainability transformation contexts.
+
+## D) UI + routes (each route must be reachable)
+
+Global: show step nav on every page:
+
+**Questionnaire → Profile → Twin → Map → Upload → Diagnostics → Pathways**  
+
+Highlight current route.
+
+### 1) `/questionnaire`
+
+Form fields:
+
+- orgName, sector, geography, companySize
+- transformationTheme (textarea)
+- whereStalls (textarea)
+- stakeholders list (add/remove rows, default 3, max 8)
+- constraints checkboxes + notes textarea
+
+Buttons:
+
+- **Load demo org (Nordlicht Materials)**: fills all fields with realistic values (including 4–6 stakeholders).
+- **Generate twin canvas**:
+    - Save questionnaire to localStorage
+    - Generate `profileSummary = generateProfileSummary(q)`
+    - Generate `twin = generateTwin(q)`
+    - Navigate to `/profile`
+
+### 2) `/profile`
+
+- Show `profileSummary` in editable textarea.
+- Save edits back to project.
+- CTA: Continue → `/twin`
+
+### 3) `/twin` (Twin Canvas)
+
+Show:
+
+- “System map preview” (simple is fine in v1):
+    - list nodes (label + kind)
+    - list edges (source → target + label)
+- Hotspot cards (3–6) with severity badges
+- Missing signals list
+
+Buttons:
+
+- View system map → `/map`
+- Upload artefacts → `/upload`
+- Skip to diagnostics → `/diagnostics` (if diagnostics missing, generate them)
+
+### 4) `/map`
+
+- Render nodes + edges from `project.twin.graph`.
+- v1 can be lists; no graph library required.
+- CTA: Back to `/twin`
+
+### 5) `/upload`
+
+- Upload up to 3 files (pdf/docx/txt).
+- v1: store metadata only (id, name, size, type).
+- Show uploaded list with remove buttons.
+- CTA: “Generate diagnostics”
+    - Save artefacts
+    - Generate `diagnostics = generateDiagnostics(project)`
+    - Generate `pathways = generatePathways(diagnostics)`
+    - Navigate to `/diagnostics`
+
+### 6) `/diagnostics`
+
+Display outputs clearly as 4 sections/cards (or tabs):
+
+1) Baseline diagnosis (3 text blocks)
+
+2) Hypotheses list (title, rationale, falsifier)
+
+3) Risk hotspots list (title, early warning, first move)
+
+4) Intervention shortlist list (title, type, effort, impact, description)
+
+Also show an “Assumptions & missing info” panel:
+
+- assumptions with confidence badges
+- missing info checklist with “why it matters”
+
+CTA: “Generate pathway options” → `/pathways` (if missing, generate)
+
+### 7) `/pathways`
+
+- Render 3 pathway cards:
+    - governance-first
+    - capacity-first
+    - coalition-first
+
+Each shows: intent, benefits, likely resistance, measures in 30 days.
+
+- “Select” button:
+    - sets `selectedPathwayId` in project + localStorage
+    - show toast “Saved”
+- Show currently selected pathway at top.
+
+## E) Guardrails
+
+If a user opens a later page without prior steps:
+
+- show a friendly message + button to go to `/questionnaire`
+- avoid runtime errors if arrays are empty
+
+## F) README
+
+Update `README.md`:
+
+- how to run (`npm run dev`)
+- what’s implemented
+- where to edit:
+    - questionnaire fields (file path)
+    - stub outputs (`lib/stubAi.ts`)
+    - pathway text
+
+Finally: print a short “Demo checklist” of what to click to run through the flow end-to-end.

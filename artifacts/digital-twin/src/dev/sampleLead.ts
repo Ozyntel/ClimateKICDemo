@@ -1,0 +1,127 @@
+/**
+ * SYNTHETIC SAMPLE LEAD — DEVELOPMENT BUILDS ONLY.
+ *
+ * A made-up mid-sized manufacturer so the team can click through the demo in
+ * a development build without preparing a real lead. Every name, number,
+ * source and view here is invented. It is loaded only through the DEV-gated
+ * button in /prepare (src/dev/DevSampleButton.tsx); production builds drop it,
+ * and `check:dist` fails if "Sample organisation" ever reaches the bundle.
+ */
+const S = (id: string, label: string, visual: string, state: string, extra: Record<string, unknown> = {}) => ({
+  id, label, visual, state, overlays: [], layer: "", near: "", note: "", holder: "", evidence: "", confidence: "unknown", confidenceWhy: "", sourceIds: [],
+  measure: { value: "", unit: "", asOf: "" }, portfolio: { tier: "", health: "", status: "" }, ...extra,
+});
+
+export const SAMPLE_LEAD = {
+  schema: "ozy-lead-case",
+  version: 1,
+  id: "lead-dev-sample",
+  internalLabel: "SYNTHETIC SAMPLE — development only",
+  createdAt: "2026-11-01T00:00:00.000Z",
+  updatedAt: "2026-11-01T00:00:00.000Z",
+  presentation: { orgType: "company", theme: "" },
+  organisation: {
+    name: "Sample organisation (synthetic)",
+    overview: "A synthetic mid-sized manufacturer used only to preview the demo. Every name, number and source in this case is made up.",
+    sector: "Manufacturing (synthetic)",
+    place: "Sample town",
+    size: "201-500",
+    context: "",
+    visual: "organisation",
+    state: "operating",
+  },
+  respondent: { role: "Operations director (sample)", accountableFor: "On-time delivery", goals: "Fewer late orders without adding overtime" },
+  decision: {
+    question: "Which change should we try first to bring late deliveries down?",
+    challenge: "About one order in five ships late. Planning, the production line and a key supplier each point to a different cause.",
+    objectives: ["Fewer late orders", "Keep overtime flat"],
+    timeHorizon: "12 months",
+    inScope: ["Production planning", "Line 2", "Inbound parts from Supplier A"],
+    outOfScope: ["Pricing"],
+    workingWell: ["Quality checks on finished goods"],
+    underway: ["Pilot of a new planning tool"],
+    whereStalls: "Schedule changes wait for the weekly operations meeting.",
+  },
+  intake: {
+    constraints: { capacityLimits: true, governanceBottlenecks: false, decisionLatency: true, unclearOwnership: false },
+    constraintNotes: "",
+    external: { marketVolatility: "Medium", demandOutlook: "Stable to rising", regulatoryPressure: "", supplyDisruptionRisk: "Medium", environmentalFactor: "" },
+    omitSections: [],
+  },
+  numbers: [
+    { id: "n-late", label: "Orders shipped late", value: "19", unit: "%", asOf: "2026-09", evidence: "observed", sourceIds: ["S-01"], note: "" },
+    { id: "n-overtime", label: "Overtime per month", value: "640", unit: "hours", asOf: "2026-09", evidence: "observed", sourceIds: ["S-01"], note: "" },
+    { id: "n-lead", label: "Supplier A lead time", value: "", unit: "days", asOf: "", evidence: "", sourceIds: [], note: "Not known until the supplier sources are uploaded." },
+  ],
+  elements: [
+    S("el-site", "Main plant", "facility", "operating", { evidence: "observed", confidence: "high", sourceIds: ["S-01"] }),
+    S("el-line2", "Line 2", "machine", "delayed", { overlays: ["delay"], near: "el-site", evidence: "observed", confidence: "medium", sourceIds: ["S-01"], note: "Stops when parts arrive late." }),
+    S("el-supplier", "Supplier A", "supplier", "available", { overlays: ["possible-risk", "conflicting-accounts"], evidence: "stakeholder", confidence: "low", confidenceWhy: "Two sources disagree on lead time." }),
+    S("el-customers", "Key customers", "customer", "signed", { evidence: "observed", confidence: "medium" }),
+    S("el-backlog", "Order backlog", "stock", "full", { near: "el-site", evidence: "observed", confidence: "high", sourceIds: ["S-01"], measure: { value: "1240", unit: "orders", asOf: "2026-09" } }),
+    S("el-decision", "Schedule changes", "decision", "pending", { overlays: ["delay"], evidence: "stakeholder", confidence: "medium", note: "Wait for the weekly meeting." }),
+    S("el-culture", "Planning culture", "culture", "mixed", { near: "el-site", holder: "Planning and shift leads (interviews)", evidence: "stakeholder", confidence: "medium" }),
+  ],
+  teams: [
+    { id: "team-plan", name: "Planning", purpose: "Builds the weekly production plan", headcount: 6, roles: ["Planning lead", "Planner"], tier: null, visual: "team", state: "constrained", overlays: ["workload"],
+      views: [{ text: "Late parts break the plan every week.", holder: "Planning lead (interview)", evidence: "stakeholder", sourceIds: ["S-02"] }] },
+    { id: "team-prod", name: "Production", purpose: "Runs the lines across three shifts", headcount: 85, roles: ["Shift lead", "Operator", "Maintenance"], tier: null, visual: "team", state: "active", overlays: [],
+      views: [{ text: "The plan changes too late for us to react.", holder: "Shift leads (interviews)", evidence: "stakeholder", sourceIds: [] }] },
+    { id: "team-sales", name: "Sales", purpose: "Agrees delivery dates with customers", headcount: null, roles: ["Account manager"], tier: null, visual: "team", state: "unknown", overlays: [], views: [] },
+  ],
+  relationships: [
+    { id: "r1", from: "el-supplier", to: "org", type: "flow", label: "Supplies parts", state: "flowing", tone: "neutral", frequency: "high", evidence: "observed", sourceIds: [], perspectives: [] },
+    { id: "r2", from: "team-plan", to: "team-prod", type: "handover", label: "Weekly plan hand-over", state: "clear", tone: "neutral", frequency: "low", evidence: "observed", sourceIds: [], perspectives: [] },
+    { id: "r3", from: "team-sales", to: "team-plan", type: "tension", label: "Promised dates vs. capacity", state: "mild", tone: "tension", frequency: "unknown", evidence: "stakeholder", sourceIds: [],
+      perspectives: [
+        { text: "Sales promises dates before checking capacity.", holder: "Planning lead", evidence: "stakeholder", sourceIds: [] },
+        { text: "Customers won't wait for a capacity check.", holder: "Account manager", evidence: "stakeholder", sourceIds: [] },
+      ] },
+  ],
+  sources: [
+    { id: "S-01", title: "Operations dashboard export (sample)", fileName: "s-01-dashboard.md", date: "2026-10-01", docType: "Dashboard export", scope: "Main plant, Jan–Sep 2026", owner: "Operations",
+      excerpt: "Late orders: 12% in January, 19% in September.", fullText: "# Operations dashboard (synthetic)\nLate orders rose from 12% to 19% between January and September 2026.",
+      reading: { extracted: ["Late orders by month", "Overtime by month"], changes: ["Adds the trend behind the late-order figure"], affected: ["Planning", "Production"], uncertainties: ["Does not say why orders were late"] },
+      updates: [], signals: ["Late orders cluster in weeks when Supplier A parts arrive after Tuesday."] },
+    { id: "S-02", title: "Supplier review notes (sample)", fileName: "s-02-supplier-review.md", date: "2026-10-14", docType: "Meeting notes", scope: "Supplier A, Q3 2026", owner: "Purchasing",
+      excerpt: "Supplier A confirms a 21-day lead time.", fullText: "# Supplier review (synthetic)\nSupplier A confirms a 21-day lead time for the main part family.",
+      reading: { extracted: ["Lead time stated by the supplier"], changes: ["Sets Supplier A lead time"], affected: ["Planning"], uncertainties: ["Supplier's own figure"] },
+      updates: [{ numberId: "n-lead", value: "21", asOf: "2026-10" }], signals: ["Supplier A states a 21-day lead time."] },
+    { id: "S-03", title: "Purchasing log extract (sample)", fileName: "s-03-purchasing-log.md", date: "2026-10-20", docType: "System extract", scope: "Supplier A orders, Q3 2026", owner: "Purchasing",
+      excerpt: "Average 28 days from order to receipt.", fullText: "# Purchasing log (synthetic)\nOrders to Supplier A took 28 days on average from order to receipt.",
+      reading: { extracted: ["Measured order-to-receipt time"], changes: ["Gives a second lead-time figure"], affected: ["Planning", "Purchasing"], uncertainties: ["Includes our own receiving delays"] },
+      updates: [{ numberId: "n-lead", value: "28", asOf: "2026-10" }], signals: ["Purchasing log shows 28 days from order to receipt."] },
+  ],
+  findings: [
+    { id: "f1", text: "Late orders rose from 12% to 19% over nine months.", kind: "signal", evidence: "observed", confidence: "high", confidenceWhy: "", sourceIds: ["S-01"], about: "el-site" },
+    { id: "f2", text: "Planners and shift leads describe the same hand-over differently.", kind: "signal", evidence: "stakeholder", confidence: "medium", confidenceWhy: "Four interviews", sourceIds: [], about: "team-plan" },
+    { id: "f3", text: "Schedule changes can wait up to a week for a decision.", kind: "finding", evidence: "stakeholder", confidence: "medium", confidenceWhy: "", sourceIds: [], about: "el-decision" },
+  ],
+  assumptions: [{ id: "a1", text: "Customer demand stays roughly flat over the next 12 months.", basis: "Sales outlook in the intake (sample)", sourceIds: [] }],
+  missingInfo: [{ id: "m1", title: "Supplier A on-time performance by part", why: "Shows whether late parts or late plans drive late orders.", sharpens: "The pathway comparison", status: "missing" }],
+  limitations: ["Everything in this case is synthetic and exists only to preview the demo."],
+  notices: [],
+  pathways: [
+    { id: "pw-1", title: "Daily schedule decisions", summary: "Move schedule-change decisions from the weekly meeting to a 15-minute daily slot.", idea: "Decide closer to the problem.", horizon: "3 months", cost: "Low (sample)",
+      needs: ["A named decision owner per shift"], conditions: [], interventions: ["Daily 15-minute slot", "Simple change log"], watch: "Late orders and overtime, weekly", sourceIds: ["S-01"],
+      wins: [{ label: "Faster schedule changes", near: "el-decision", from: 1, until: null }],
+      risks: [{ label: "Meeting fatigue", near: "team-prod", from: 1, until: 4 }],
+      effects: [{ target: "el-decision", label: "Decisions within a day", tone: "benefit", direction: "increase" }, { target: "team-plan", label: "Less re-planning", tone: "benefit", direction: "decrease" }] },
+    { id: "pw-2", title: "Second source for key parts", summary: "Qualify a second supplier for the part family that stops Line 2.", idea: "Reduce dependence on one supplier.", horizon: "9 months", cost: "Medium (sample)",
+      needs: ["Qualification capacity in Purchasing"], conditions: [], interventions: ["Supplier search", "Trial orders"], watch: "Line 2 stoppages", sourceIds: ["S-02", "S-03"],
+      wins: [{ label: "Fewer part shortages", near: "el-supplier", from: 6, until: null }],
+      risks: [{ label: "Qualification effort", near: "team-plan", from: 0, until: 6 }, { label: "Strain with Supplier A", near: "el-supplier", from: 2, until: null }],
+      effects: [{ target: "el-supplier", label: "Less dependence on Supplier A", tone: "mixed", direction: "decrease" }, { target: "el-line2", label: "Fewer stoppages", tone: "benefit", direction: "decrease" }] },
+    { id: "pw-3", title: "Buffer stock for Line 2", summary: "Hold two weeks of the critical parts in stock.", idea: "Absorb late deliveries.", horizon: "2 months", cost: "Ties up cash (sample)",
+      needs: ["Warehouse space"], conditions: [], interventions: ["Safety stock level", "Weekly stock review"], watch: "Stock value and Line 2 stoppages", sourceIds: [],
+      wins: [{ label: "Line 2 keeps running", near: "el-line2", from: 1, until: null }],
+      risks: [{ label: "Cash tied up in stock", near: "org", from: 1, until: null }],
+      effects: [{ target: "el-backlog", label: "Backlog shrinks", tone: "benefit", direction: "decrease" }, { target: "org", label: "More cash in stock", tone: "risk", direction: "increase" }] },
+  ],
+  outcomeEstimate: { question: "Chance late orders fall below 10% within 12 months", basis: "Team judgement for this synthetic sample — a demo assumption, not a prediction.", values: { "pw-1": 45, "pw-2": 35, "pw-3": 30 } },
+  scenarios: [
+    { id: "sc-1", question: "What if Supplier A's lead time grows by a week?",
+      effects: [{ target: "el-supplier", label: "Parts arrive later", tone: "risk", direction: "" }, { target: "el-line2", label: "Line 2 waits for parts", tone: "risk", direction: "" }, { target: "team-plan", label: "More re-planning", tone: "risk", direction: "increase" }],
+      assumptions: ["Other suppliers unchanged"] },
+  ],
+};

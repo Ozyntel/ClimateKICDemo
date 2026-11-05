@@ -1,0 +1,78 @@
+## Show predicted bottlenecks (likely resistance) as red warning icons on the systems map after pathway selection
+
+Implement a visual overlay on the **/map** systems map that highlights predicted bottlenecks/resistance points based on the currently selected pathway.
+
+### 1) Data model
+
+- Ensure `project.selectedPathwayId` is persisted (already exists).
+- Ensure `project.pathways` includes `likelyResistance: string[]` for each pathway.
+
+Add a derived runtime object (no need to persist unless you want):
+
+- `predictedWarnings: Array<{ id: string; message: string; target: { type: "node"|"edge"; nodeId?: string; edgeId?: string } }>`
+
+### 2) Create a mapping helper
+
+Create `lib/resistanceMapping.ts` with a function:
+
+`mapResistanceToWarnings({ resistanceList, graph }): PredictedWarning[]`
+
+Rules (simple keyword matching is fine):
+
+- If resistance mentions any of: `IT`, `ERP`, `data access`, `backlog`, `integration`
+    - target node: a node whose label includes “IT” or “Data Platform”
+    - else create a node “Head of IT / Data Platform Owner” (kind: role, appropriate function cluster) and target it
+- If resistance mentions: `CFO`, `finance`, `budget`, `capex`, `approval`
+    - target node: CFO / Finance
+- If resistance mentions: `definition`, `KPI`, `metric`, `registry`, `rework`
+    - target edge: ESG Working Group ↔ Finance (if present), else target ESG Working Group node
+- If resistance mentions: `works council`, `shopfloor`, `capacity`, `surveillance`, `monitoring`, `union`
+    - target node: Works Council (or People/Capability)
+- If resistance mentions: `supplier`, `procurement`, `tier 1`, `PDF`
+    - target node: Procurement / Supplier Management
+
+Fallback:
+
+- target the ESG Working Group node.
+
+Each warning message should be the original resistance text, truncated to ~120 chars.
+
+### 3) On pathway selection: store and trigger
+
+On `/pathways`, when the user clicks “Select”:
+
+- store `selectedPathwayId` (already)
+- show toast (already)
+- no other new behavior needed; the map will read from selectedPathwayId
+
+### 4) Map UI: render warning overlays
+
+On `/map`:
+
+- If `selectedPathwayId` is set:
+    - find the selected pathway in `project.pathways`
+    - compute `predictedWarnings` from `pathway.likelyResistance` and the active graph
+    - render a **red warning icon** (small triangle ⚠ or SVG) near the targeted node/edge:
+        - Node: place icon near node label or top-right of node
+        - Edge: place icon at the midpoint of the edge line
+    - Add hover tooltip (simple title attribute is enough) that shows the warning message.
+- Add a small legend above the map:
+    - Gray line = dependency
+    - Red ⚠ = predicted resistance (selected pathway)
+- Add a small toggle switch: “Show predicted bottlenecks”
+    - default ON when a pathway is selected
+    - toggle only affects visibility of warning overlays (does not change data)
+
+### 5) Keep scope tight
+
+- Do NOT change the existing base edge rendering besides overlaying warning icons.
+- No new external libraries unless absolutely necessary.
+- Must not crash if warnings cannot be mapped (just skip those warnings).
+
+### 6) Confirmation
+
+After implementing, verify:
+
+- No pathway selected → no warnings shown
+- Select a pathway → warnings appear on /map
+- Hovering warnings shows the resistance text

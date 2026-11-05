@@ -1,0 +1,62 @@
+## Add a circular SWOT widget (editable, local-only) to the Diagnostics page
+
+Add a **SWOT analysis visual** to the **/diagnostics** page (not /twin).
+
+### 1) UI: Circular SWOT (4 quadrants)
+
+Create a component, e.g. `components/SwotCircle.tsx`, that renders a **circle divided into 4 quadrants** (SVG is fine). Label quadrants:
+
+- **Strengths** (top-left)
+- **Weaknesses** (top-right)
+- **Opportunities** (bottom-left)
+- **Threats** (bottom-right)
+
+Each quadrant displays bullet items.
+
+### 2) Data: prefill SWOT from existing diagnostics + assets
+
+On load, prefill SWOT items using current app data (best effort):
+
+- **Strengths**: from assets / `workingWellAssets` and any “Assets to leverage” section.
+- **Weaknesses**: from bottlenecks/hotspots (definition churn, parallel systems, data quality ownership gap).
+- **Opportunities**: from missing signals turned into initiatives (RACI, evidence packs, metric registry) and any pathway “next 30 days” measures.
+- **Threats**: from risks/hotspots (approval latency, IT gating, supplier inconsistency, works council concerns).
+
+If LLM extraction exists, prefer extraction-derived items. Otherwise use stub diagnostics.
+
+### 3) Editing: user can add info without affecting other pages
+
+Add an “Edit SWOT” mode:
+
+- Each quadrant has:
+    - input field + “Add” button
+    - delete button per item
+- Store edits in a separate local-only store (either:
+    - `project.swotLocalEdits`, or
+    - a separate localStorage key like `dto_swot_local_v0`)
+- **Do not** feed SWOT edits back into twin/diagnostics/pathways generation. It’s purely manual annotation.
+
+Add note: “Manual edits (demo) — does not affect diagnostics yet.”
+
+### 4) Placement on /diagnostics
+
+Place the SWOT widget:
+
+- **below** the hypotheses/risks/interventions sections (near the bottom), or
+- in a right-side column if the page already has a two-column layout
+
+### 5) Guardrails
+
+- If there’s no data, render empty quadrants with placeholders.
+- Must not crash if arrays are empty.
+
+### 6) Styling
+
+Use Tailwind so it’s readable and “presentation-ready” (no need for perfection).
+
+After implementing, confirm:
+
+- SWOT appears on `/diagnostics`
+- It is prefilled from current project data
+- User edits persist on refresh
+- User edits do not change other pages/content

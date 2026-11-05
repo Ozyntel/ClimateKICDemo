@@ -1,0 +1,109 @@
+## Make “assets” shape outputs (leverage strategy + asset-linked hypotheses + map highlighting)
+
+Implement an “asset-aware” layer so `workingWellAssets` (and any extracted assets) actively influence Diagnostics, Pathways, and the Systems Map. Keep it deterministic and demo-safe.
+
+### 1) Data model additions
+
+Extend `Diagnostics` with:
+
+- `assets: Array<{ id: string; text: string; source: "questionnaire" | "extraction" }>` (3–8)
+- `leverageStrategy: Array<{ id: string; assetId: string; howToLeverage: string; whereOnMap?: { nodeId?: string; edgeId?: string } }>` (3–6)
+
+Extend `Pathway` with:
+
+- `assetsToLeanOn: Array<{ assetId: string; rationale: string }>` (2–4 per pathway)
+
+Extend your predicted warning model (if present) with:
+
+- `mitigationUsesAssetId?: string` (optional link to an asset used as mitigation)
+
+### 2) Asset extraction (from questionnaire and extraction)
+
+Create helper `lib/assets.ts` with function:
+
+`getAssets(project): Diagnostics["assets"]`
+
+Rules:
+
+- Prefer `questionnaire.workingWellAssets` (split into bullets by newline / “- ”).
+- If LLM extraction exists, also include any entity/evidence that clearly indicates a strength (e.g. “templates are consistent”, “near-miss reporting improved”, “renewable electricity share increased”).
+- Deduplicate similar items.
+- Hard limit to 8.
+
+### 3) Update diagnostics generation (asset-aware)
+
+Update `generateDiagnostics(project)`:
+
+A) Populate `diagnostics.assets` using `getAssets(project)`.
+
+B) Add “asset hypotheses”
+
+- For each of the top 3–5 assets, create a hypothesis with:
+    - `polarity: "asset"` (green)
+    - title like “Asset: <short name> can accelerate execution”
+    - rationale: why it matters for this transformation goal
+    - falsifier: what would prove it’s not actually an asset
+- Keep existing negative hypotheses (`polarity: "risk"`) too.
+
+C) Create a `leverageStrategy` list
+
+For each asset, produce 1 short “how to leverage” instruction, tied to a bottleneck/hotspot. Example:
+
+- Asset: “Consistent Finance templates” → leverage move: “Use templates as the baseline for metric definition registry; freeze definitions for one cycle.”
+
+If predicted bottlenecks exist, use them to shape leverage strategy (pair assets to bottlenecks).
+
+### 4) Update diagnostics UI
+
+On `/diagnostics`:
+
+- Show a new section after Baseline (or after SWOT if you placed SWOT there):
+    
+    **“Assets to leverage”**
+    
+    - list the assets
+- Show another section:
+    
+    **“Leverage strategy (how to use what’s working)”**
+    
+    - show 3–6 items mapping asset → action
+- In the hypotheses list:
+    - ensure asset hypotheses are styled green (already planned)
+    - ensure risk hypotheses are styled red
+
+### 5) Update pathway generation (assets-to-lean-on)
+
+Update `generatePathways(diagnostics)` so each pathway includes:
+
+- `assetsToLeanOn` (2–4 assets with a short rationale)
+
+Example:
+
+- Governance-first leans on “Consistent templates” + “Near-miss culture” (because it supports truth + learning loops)
+
+On `/pathways`, display “Assets to lean on” inside each pathway card.
+
+### 6) Map integration (lightweight)
+
+On `/map`:
+
+- If assets exist, highlight the most relevant nodes/edges:
+    - Add small green “asset” markers (e.g. ● or ✓) near nodes/edges referenced by leverageStrategy or keyword mapping.
+- Add legend:
+    - green marker = asset to leverage
+    - red warning = predicted resistance
+
+Keyword mapping is fine (e.g. “templates” → Finance/Controlling; “near-miss” → HSE/Operations; “renewable electricity” → Operations/Energy).
+
+### 7) Keep scope tight
+
+- No new pages.
+- No new libraries required.
+- Deterministic behavior only (except optional LLM extraction input).
+
+After implementing, confirm:
+
+- assets appear as first-class objects in diagnostics + pathways
+- hypotheses include asset hypotheses (green) + risk hypotheses (red)
+- leverage strategy is shown and tied to predicted bottlenecks where possible
+- map shows green asset markers plus red resistance warnings

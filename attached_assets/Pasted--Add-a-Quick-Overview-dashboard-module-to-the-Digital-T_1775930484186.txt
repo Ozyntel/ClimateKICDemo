@@ -1,0 +1,77 @@
+## Add a “Quick Overview” dashboard module to the Digital Twin page (/twin)
+
+On the **/twin** page, add a compact dashboard-style module at the top called **“Quick overview”** (not “DTO summary”). This should make it instantly clear what the product is doing.
+
+### 1) Placement + layout
+
+- Place **Quick overview** at the very top of `/twin`, above the map preview/hotspots.
+- Use a clean dashboard layout (cards in 2 rows is fine):
+    - Row 1: 3–4 small stat cards
+    - Row 2: 2 wider cards (or 3 if space allows)
+
+### 2) Content (use existing project data)
+
+Populate the module from what already exists (questionnaire + extraction + diagnostics + pathways + predicted bottlenecks). No new backend.
+
+**Row 1: Stat cards**
+
+1) **Transformation goal**
+
+- Show 1–2 line summary from `questionnaire.transformationGoal` (truncate)
+
+2) **Assets**
+
+- Show count of assets (from diagnostics assets list) and the top 1–2 asset keywords
+
+3) **Predicted bottlenecks**
+
+- Show count of predicted bottlenecks for the currently selected pathway
+- If no pathway selected: show “Select a pathway”
+
+4) **Confidence / coverage**
+
+- Coverage badge: “Questionnaire only” vs “Artefact evidence” (if extraction exists)
+- Confidence heuristic (Low/Medium/High) based on evidence count vs missing signals
+
+**Row 2: Wider cards**
+
+5) **Selected pathway**
+
+- If selected: pathway name + one-line intent
+- If not selected: “No pathway selected”
+- Include a CTA button “Choose / compare pathways” linking to `/pathways`
+
+6) **Next best actions (7 days)**
+
+- Show 3–5 bullets drawn from:
+    - top mitigation moves from predicted bottlenecks (if available)
+    - otherwise from missing signals / intervention shortlist
+- Include a CTA “View interventions” that scrolls to interventions on `/diagnostics` (or navigates there and opens the interventions section)
+
+### 3) Micro-interactions / navigation
+
+- Add small “View” links on cards:
+    - Goal → scroll to goal section on /twin (or open respondent/profile panel if you have one)
+    - Assets → `/diagnostics` (open Assets section)
+    - Bottlenecks → `/map` (open predicted bottlenecks collapsible)
+    - Evidence → `/upload` (to add artefact text)
+
+### 4) Visual consistency
+
+- Use consistent color system:
+    - Assets/strength = green
+    - Bottlenecks/resistance = red
+    - Missing/unknown = gray/amber
+- Keep it compact (no walls of text). Truncate long text.
+
+### 5) Guardrails
+
+- If any data is missing, show helpful empty states (never blank cards).
+
+### 6) Confirm
+
+After implementing, confirm:
+
+- /twin now opens with a “Quick overview” module that clearly communicates value at a glance
+- all cards populate from existing state
+- links/CTAs navigate to the relevant sections/pages

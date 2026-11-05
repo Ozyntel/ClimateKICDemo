@@ -1,0 +1,132 @@
+/* Ozy visual vocabulary — shared styles for the registry components.
+ * Light surface by default; add .ozv-dark on a dark page (twin, data, pathways).
+ * Colour is never the only cue: every tone is paired with text and a pattern. */
+
+.ozv {
+  --ozv-ink: #221e2e;
+  --ozv-muted: #6a6376;
+  --ozv-line: #e9e2d4;
+  --ozv-card: #ffffff;
+  --ozv-chip: #f4f1ea;
+  --ozv-neutral: #3b3550;
+  --ozv-positive: #0e8c72;
+  --ozv-caution: #a76100;
+  --ozv-negative: #c8321b;
+  --ozv-proposed: #6236e8;
+  --ozv-scenario: #5f6f00;
+  --ozv-unknown: #7c7889;
+  --ozv-focus: #1a51ff;
+  color: var(--ozv-ink);
+  font-family: var(--font-body, system-ui, sans-serif);
+}
+.ozv.ozv-dark, .ozv-dark .ozv {
+  --ozv-ink: #f6f3ec;
+  --ozv-muted: #9fb3bc;
+  --ozv-line: rgba(195, 207, 212, 0.18);
+  --ozv-card: rgba(17, 21, 31, 0.92);
+  --ozv-chip: rgba(255, 255, 255, 0.06);
+  --ozv-neutral: #c3cfd4;
+  --ozv-positive: #5eead4;
+  --ozv-caution: #f5cf5b;
+  --ozv-negative: #ff7a5c;
+  --ozv-proposed: #c4b5fd;
+  --ozv-scenario: #d9f23a;
+  --ozv-unknown: #8e97a3;
+  --ozv-focus: #d9f23a;
+}
+
+.ozv-tone-neutral { color: var(--ozv-neutral); }
+.ozv-tone-positive { color: var(--ozv-positive); }
+.ozv-tone-caution { color: var(--ozv-caution); }
+.ozv-tone-negative { color: var(--ozv-negative); }
+.ozv-tone-proposed { color: var(--ozv-proposed); }
+.ozv-tone-scenario { color: var(--ozv-scenario); }
+.ozv-tone-unknown { color: var(--ozv-unknown); }
+
+.ozv-glyph { display: block; flex-shrink: 0; overflow: visible; }
+.ozv-glyph.ozv-muted { opacity: 0.5; }
+.ozv-badge-bg { fill: var(--ozv-card); stroke: currentColor; stroke-width: 1.4; }
+
+/* Decorative motion only. Off for reduced motion and in static mode. */
+@media (prefers-reduced-motion: no-preference) {
+  .ozv:not([data-ozv-static="true"]) .ozv-flow { animation: ozv-drift 2.4s ease-in-out infinite alternate; }
+  .ozv:not([data-ozv-static="true"]) .ozv-pulse { animation: ozv-pulse 1.8s ease-in-out infinite; }
+  .ozv:not([data-ozv-static="true"]) .ozv-dash { animation: ozv-dash 1.2s linear infinite; }
+}
+@keyframes ozv-drift { from { transform: translateX(-1.5px); } to { transform: translateX(1.5px); } }
+@keyframes ozv-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+@keyframes ozv-dash { to { stroke-dashoffset: -18; } }
+
+/* Node card */
+.ozv-node {
+  display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 14px;
+  background: var(--ozv-card); border: 1px solid var(--ozv-line); text-align: left; font: inherit; color: inherit;
+  min-width: 0; width: 100%;
+}
+button.ozv-node { cursor: pointer; }
+button.ozv-node:hover { border-color: var(--ozv-proposed); }
+.ozv-node[aria-pressed="true"], .ozv-node[data-selected="true"] { border-color: var(--ozv-focus); box-shadow: 0 0 0 2px color-mix(in srgb, var(--ozv-focus) 35%, transparent); }
+.ozv-node:focus-visible, .ozv-btn:focus-visible, .ozv-chipbtn:focus-visible { outline: 3px solid var(--ozv-focus); outline-offset: 2px; }
+.ozv-node[data-changed="true"] { border-style: dashed; border-color: var(--ozv-scenario); }
+.ozv-node-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
+.ozv-node-label { font: 600 13.5px/1.3 var(--font-body, system-ui); overflow-wrap: anywhere; }
+.ozv-node-type { font: 500 11px/1.3 var(--font-body, system-ui); color: var(--ozv-muted); }
+.ozv-state { display: inline-flex; align-items: center; gap: 6px; font: 600 12px/1.3 var(--font-body, system-ui); }
+.ozv-state-mark { width: 9px; height: 9px; border-radius: 2px; border: 1.6px solid currentColor; flex-shrink: 0; }
+.ozv-state-mark[data-outline="dashed"] { border-style: dashed; }
+.ozv-state-mark[data-outline="dotted"] { border-style: dotted; }
+.ozv-state-mark[data-fill="solid"] { background: currentColor; }
+.ozv-state-mark[data-fill="hatched"] { background: repeating-linear-gradient(45deg, currentColor 0 1.5px, transparent 1.5px 4px); }
+.ozv-measure { font: 600 12.5px/1.3 var(--font-body, system-ui); }
+.ozv-row { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+
+/* Chips: overlays, evidence, confidence */
+.ozv-chip {
+  display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 999px; max-width: 100%;
+  font: 600 11px/1.4 var(--font-body, system-ui); background: var(--ozv-chip); border: 1.4px solid transparent; white-space: normal; overflow-wrap: anywhere; text-align: left;
+}
+.ozv-chip svg { flex-shrink: 0; }
+.ozv-ev-observed { border-color: currentColor; border-style: solid; }
+.ozv-ev-synthetic { border-color: currentColor; border-style: double; border-width: 3px; }
+.ozv-ev-stakeholder { border-color: currentColor; border-style: solid; border-radius: 10px 10px 10px 2px; }
+.ozv-ev-assumption { border-color: currentColor; border-style: dashed; }
+.ozv-ev-illustrative { border-color: currentColor; border-style: dotted; background: repeating-linear-gradient(45deg, transparent 0 4px, color-mix(in srgb, currentColor 14%, transparent) 4px 6px); }
+.ozv-ev-none { border-color: var(--ozv-line); border-style: dashed; color: var(--ozv-muted); }
+
+.ozv-conf { display: inline-flex; align-items: center; gap: 6px; font: 600 11px/1.4 var(--font-body, system-ui); color: var(--ozv-ink); }
+.ozv-conf-bar { display: inline-flex; gap: 2px; }
+.ozv-conf-bar i { width: 10px; height: 6px; border-radius: 1px; border: 1.2px solid currentColor; }
+.ozv-conf-bar i[data-on="true"] { background: currentColor; }
+
+/* Panels */
+.ozv-panel { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border-radius: 16px; background: var(--ozv-card); border: 1px solid var(--ozv-line); }
+.ozv-panel h3, .ozv-panel h4 { margin: 0; }
+.ozv-dl { display: grid; grid-template-columns: minmax(90px, max-content) 1fr; gap: 6px 12px; margin: 0; font: 400 12.5px/1.45 var(--font-body, system-ui); }
+.ozv-dl dt { color: var(--ozv-muted); font-weight: 600; }
+.ozv-dl dd { margin: 0; overflow-wrap: anywhere; }
+.ozv-src { display: flex; flex-direction: column; gap: 3px; padding: 8px 10px; border-radius: 10px; background: var(--ozv-chip); }
+.ozv-src b { font: 600 12.5px/1.3 var(--font-body, system-ui); }
+.ozv-src span { font: 400 11.5px/1.4 var(--font-body, system-ui); color: var(--ozv-muted); }
+.ozv-rule { font: italic 400 11.5px/1.45 var(--font-body, system-ui); color: var(--ozv-muted); }
+.ozv-muted-text { color: var(--ozv-muted); }
+
+/* Limitations (fixed section) */
+.ozv-limits { display: flex; flex-direction: column; gap: 8px; padding: 16px 18px; border-radius: 16px; border: 1.5px solid var(--ozv-line); background: var(--ozv-card); }
+.ozv-limits h2 { margin: 0; font: 700 16px/1.3 var(--font-display, var(--font-body, system-ui)); }
+.ozv-limits ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 5px; font: 400 13px/1.5 var(--font-body, system-ui); }
+.ozv-notice { padding: 10px 12px; border-radius: 12px; border-left: 4px solid var(--ozv-proposed); background: var(--ozv-chip); font: 400 13px/1.5 var(--font-body, system-ui); }
+
+/* List view */
+.ozv-list { display: flex; flex-direction: column; gap: 14px; }
+.ozv-list h3 { margin: 0; font: 600 13px/1.3 var(--font-body, system-ui); color: var(--ozv-muted); text-transform: none; }
+.ozv-list-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; list-style: none; padding: 0; margin: 0; }
+.ozv-conn { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: var(--ozv-card); border: 1px solid var(--ozv-line); font: 400 12.5px/1.4 var(--font-body, system-ui); }
+.ozv-btn { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--ozv-line); background: transparent; color: inherit; font: 600 12px/1 var(--font-body, system-ui); cursor: pointer; }
+.ozv-btn[aria-pressed="true"] { background: var(--ozv-ink); color: var(--ozv-card); border-color: var(--ozv-ink); }
+.ozv-chipbtn { border: none; cursor: pointer; font: inherit; }
+.ozv-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* Systems view (SVG): visible keyboard focus on nodes and connections */
+.ozv-sys-node:focus-visible > rect:not([fill="none"]) { stroke: var(--ozv-focus) !important; stroke-width: 3px; stroke-dasharray: none; }
+.ozv-sys-edge:focus-visible > path:nth-of-type(2) { stroke-width: 3.2px; }
+.ozv-sys-edge:hover > path:nth-of-type(2) { stroke-width: 2.6px; }

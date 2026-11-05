@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*", "api/**/*"],
+  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
+  "compilerOptions": {
+    "noEmit": true,
+    "jsx": "preserve",
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "resolveJsonModule": true,
+    // `allowImportingTsExtensions` was set when this config was used only
+    // for the SPA typecheck (noEmit=true). Vercel's @vercel/node builder
+    // forces noEmit=false to emit JS for the serverless functions, and
+    // the two options together are incompatible — emit gets skipped.
+    // No source file imports with a `.ts` extension so removing this is a
+    // no-op for the SPA build.
+    "moduleResolution": "bundler",
+    "types": ["node", "vite/client"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "references": [
+    {
+      "path": "../../lib/api-client-react"
+    }
+  ]
+}

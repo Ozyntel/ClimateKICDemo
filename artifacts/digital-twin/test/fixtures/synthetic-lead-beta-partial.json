@@ -1,0 +1,35 @@
+{
+  "schema": "ozy-lead-case",
+  "version": 1,
+  "id": "lead-test-beta",
+  "internalLabel": "TEST FIXTURE BETA",
+  "presentation": {
+    "orgType": "care"
+  },
+  "organisation": {
+    "name": "Test Organisation Beta"
+  },
+  "decision": {
+    "question": "Beta partial question?"
+  },
+  "teams": [
+    {
+      "id": "tb1",
+      "name": "Beta Ward Team",
+      "roles": [
+        "Beta role"
+      ]
+    },
+    {
+      "id": "tb2",
+      "name": "Beta Pharmacy"
+    }
+  ],
+  "elements": [
+    {
+      "id": "eb1",
+      "label": "Beta Partner",
+      "visual": "external-stakeholder"
+    }
+  ]
+}

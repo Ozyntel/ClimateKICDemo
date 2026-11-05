@@ -1,0 +1,144 @@
+## Questionnaire upgrades + “assets” + synthetic multi-stakeholder agreement/disagreement overlays
+
+Implement the following changes across the app. Keep everything demo-safe: no auth, no DB, still localStorage single project.
+
+# 1) Questionnaire page: add “Respondent” section + rename/extend questions
+
+### A) Add “Who is filling this in?” section under Organisation basics
+
+Under Organisation basics, add a new section titled **“About you (the respondent)”** with fields:
+
+- `respondentRole` (text)
+- `respondentResponsibilities` (textarea)
+- `respondentTransformationGoals` (textarea)
+
+### B) Rename “Transformation theme” → “Transformation goal”
+
+Rename the field everywhere (label + type + storage):
+
+- `transformationTheme` becomes `transformationGoal` (keep migration/backward compatibility so old localStorage doesn’t crash; map old -> new on load)
+
+### C) Add “What is currently working well?” before stall question
+
+Add a new textarea field:
+
+- `workingWellAssets` (textarea)
+
+Placed **before** “Where does execution stall?”
+
+Update the questionnaire data model (`Questionnaire` type) accordingly:
+
+- Add `respondentRole`, `respondentResponsibilities`, `respondentTransformationGoals`, `workingWellAssets`
+- Rename `transformationTheme` to `transformationGoal`
+
+# 2) Flow the new info into other pages
+
+### A) Profile summary
+
+Update `generateProfileSummary()` to include:
+
+- respondent role + responsibilities + transformation goals
+- transformation goal
+- “What’s working well (assets)” section (bullet list derived from `workingWellAssets`)
+
+### B) Twin canvas (/twin)
+
+On the twin page, add an **“Assets that facilitate change”** section (cards or bullets) derived from `workingWellAssets`.
+
+# 3) Diagnostics: assets + color-coded hypotheses
+
+### A) Add an “Assets” subsection on /diagnostics
+
+In the diagnostics UI, add a small section titled **“Assets to leverage”** showing 3–6 assets derived from `workingWellAssets` (either direct bullets or lightly cleaned bullets).
+
+### B) Hypotheses should include asset hypotheses + negative hypotheses and be color coded
+
+Update the diagnostics data model:
+
+- Extend hypothesis items with:
+    - `polarity: "asset" | "risk"` (or `"positive"|"negative"`)
+- Update `generateDiagnostics()` so hypotheses include BOTH:
+    - **asset hypotheses** (e.g., “Strong near-miss reporting suggests…”)
+    - **negative hypotheses** (e.g., “Definition churn is likely driven by…”)
+- Update `/diagnostics` hypotheses list UI:
+    - asset hypotheses styled green (background/border/text)
+    - negative hypotheses styled red
+
+Keep determinism in stub mode and incorporate extraction if available.
+
+# 4) “Pretend coworkers also filled in the questionnaire” (synthetic multi-respondent layer)
+
+We do NOT implement real multi-user. Instead, simulate 2–4 coworkers as synthetic respondents.
+
+### A) Data model additions
+
+Add to `Project`:
+
+- `syntheticRespondents?: Array<{ id: string; name: string; role: string }>`
+- `alignment?: { agreements: Array<...>; disagreements: Array<...> }`
+
+Define:
+
+- `AgreementDisagreement` item:
+    - `id`
+    - `topic` (short text, e.g., “Main bottleneck is IT gating”)
+    - `type: "agreement" | "disagreement"`
+    - `respondents: string[]` (ids)
+    - `summary` (1–2 lines)
+    - `confidence: "High"|"Medium"|"Low"`
+
+### B) Generation (deterministic)
+
+Implement `generateSyntheticAlignment(questionnaire, extraction?, diagnostics?)` that produces:
+
+- 2–4 synthetic respondents (e.g., “Amina — Operations”, “Jonas — Finance”, “Lea — Procurement”, etc.)
+- 3–6 agreements + 3–6 disagreements
+
+Topics should be tied to:
+
+- stall point, constraints, missing signals, and extracted entities if present
+
+### C) Twin page UI
+
+On `/twin`, add a new section:
+
+## “Stakeholder alignment (simulated)”
+
+- Show two columns:
+    - Agreements (green)
+    - Disagreements (orange/red)
+
+Each item shows topic + short summary + who said what (respondent role is enough).
+
+Add a small label: “Simulated coworker inputs (demo)”.
+
+# 5) Systems map visual overlay: color-coded connections for agreement/disagreement
+
+On `/map`:
+
+- Keep existing edges.
+- Add an **overlay layer** of additional “alignment edges” rendered on top of the base edges:
+    - Agreement edges: green stroke
+    - Disagreement edges: red/orange stroke
+- These edges should connect the most relevant nodes (e.g., “Head of IT” ↔ “CFO” for IT gating disagreement; “Finance” ↔ “ESG WG” for definition churn agreement).
+- If a referenced node doesn’t exist, create a lightweight node (kind team/role) and place it in the appropriate organisational function cluster.
+
+Add a legend in the map UI:
+
+- Base dependency edge (gray)
+- Agreement overlay (green)
+- Disagreement overlay (red/orange)
+
+# 6) Keep it stable
+
+- Update guardrails and migrations so old localStorage does not crash.
+- Add/extend the demo org button so it fills the new respondent fields + workingWellAssets with realistic content.
+- No new pages. No new external integrations.
+
+After implementing, confirm:
+
+- questionnaire contains new respondent section + renamed/added questions
+- assets appear on twin + diagnostics
+- hypotheses are color-coded asset vs risk
+- twin shows simulated alignment section
+- map shows overlay edges + legend

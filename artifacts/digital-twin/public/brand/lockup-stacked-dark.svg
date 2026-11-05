@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 220">
+  <g transform="translate(98, 18)">
+    <line x1="40" y1="4" x2="40" y2="14" stroke="#ECECE6" stroke-width="3.4"></line>
+    <line x1="40" y1="66" x2="40" y2="76" stroke="#ECECE6" stroke-width="3.4"></line>
+    <circle cx="40" cy="40" r="22" stroke="#ECECE6" stroke-width="3.4" fill="none"></circle>
+    <circle cx="40" cy="40" r="2.4" fill="#ECECE6"></circle>
+    <line x1="64" y1="40" x2="72" y2="40" stroke="#E89A82" stroke-width="3.4"></line>
+    <circle cx="74.5" cy="40" r="2.6" fill="#E89A82"></circle>
+  </g>
+  <text x="130" y="135" text-anchor="middle" font-family="Newsreader, &#39;Source Serif Pro&#39;, Georgia, serif" font-weight="700" font-size="52" letter-spacing="-1.82" fill="#ECECE6">Ozyntel</text>
+  <text x="130" y="168" text-anchor="middle" font-family="&#39;JetBrains Mono&#39;, monospace" font-weight="500" font-size="9" letter-spacing="1.6" fill="#C8C5BE">D I A G N O S T I C   I N T E L L I G E N C E</text>
+</svg>

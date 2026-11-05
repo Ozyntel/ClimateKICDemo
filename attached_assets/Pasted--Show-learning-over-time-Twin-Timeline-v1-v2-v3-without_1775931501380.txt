@@ -1,0 +1,63 @@
+## Show “learning over time” (Twin Timeline: v1 → v2 → v3) without adding complexity
+
+Add a lightweight “learning over time” module that shows how the twin evolves as new inputs arrive. Keep it demo-safe (no DB, no auth, localStorage only).
+
+### 1) Data model: add a timeline / history log
+
+Extend `Project` with:
+
+```tsx
+twinHistory?: Array<{
+  id: string
+  versionLabel: "v1" | "v2" | "v3"
+  title: string
+  createdAt: string // ISO
+  trigger: "questionnaire" | "artefact_extraction" | "pathway_selected" | "user_feedback"
+  changes: Array<{
+    type: "added_stakeholder" | "added_hotspot" | "updated_missing_signal" | "updated_map" | "updated_prediction"
+    summary: string
+  }>
+}>
+```
+
+Persist in the same localStorage key.
+
+### 2) Populate history automatically at key moments
+
+Add deterministic history entries when:
+
+A) **Questionnaire completed** (baseline twin created)
+
+- Create history item `v1` with trigger `questionnaire`
+- Changes examples:
+    - “Created baseline systems map from intake”
+    - “Added initial hotspots and missing signals”
+
+B) **Artefact extraction succeeded** (twin updated from evidence)
+
+- Create history item `v2` with trigger `artefact_extraction`
+- Compute changes by diffing v1 vs v2 (best effort):
+    - new stakeholders (nodes added)
+    - hotspots added/changed
+    - missing signals added/changed
+    - map edges added
+
+C) **Pathway selected** (predicted bottlenecks generated)
+
+- Create history item `v3` with trigger `pathway_selected`
+- Changes examples:
+    - “Added predicted resistance warnings to map”
+    - “Prioritized interventions for selected pathway”
+
+Important: Do not create duplicate entries on repeated clicks; update the existing entry if the same trigger occurs again within the same session (or de-dupe by versionLabel).
+
+### 3) UI: “Twin timeline” module on /twin
+
+On `/twin`, add a compact module titled **“Twin timeline”** (or “How the twin evolved”) below the Quick overview.
+
+- Display v1, v2, v3 as a horizontal stepper or vertical timeline.
+- Each item shows:
+    - version label (v1/v2/v3)
+    - title (e.g., “Baseline from intake”, “Updated from artefacts”, “Predicted bottlenecks for pathway”)
+    - timestamp (short)
+    - 2–4 change bullets

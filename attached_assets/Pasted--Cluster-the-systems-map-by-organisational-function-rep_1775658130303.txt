@@ -1,0 +1,68 @@
+**Cluster the systems map by organisational function (replace circular SVG layout)**
+
+Update the `/twin` and `/map` systems map so it looks like a typical systems map with **grouped clusters by organisational function**, not a circular layout.
+
+### 1) Define organisational-function clusters
+
+Create a fixed cluster set (4–7 clusters max), e.g.:
+
+- `governance`
+- `operations`
+- `finance`
+- `data_reporting`
+- `procurement_supply_chain`
+- `people_capability`
+- `external_stakeholders` (optional)
+
+Represent each cluster as a lightly colored region with a label (rounded rectangle or soft circle) in SVG.
+
+### 2) Update graph node schema
+
+Extend each graph node to include:
+
+- `functionClusterId: string` (one of the cluster ids above)
+
+If the current types live in `lib/types.ts`, update them accordingly.
+
+### 3) Assign clusters deterministically in `lib/stubAi.ts`
+
+Update `generateTwin()` so every node gets a `functionClusterId` deterministically based on its label/kind. Use a simple ruleset, e.g.:
+
+- labels containing: `board`, `steering`, `committee`, `director`, `leadership` → `governance`
+- `cfo`, `finance`, `controlling`, `budget` → `finance`
+- `ops`, `operations`, `plant`, `production`, `manufacturing` → `operations`
+- `csrd`, `esg`, `reporting`, `data`, `analytics`, `audit` → `data_reporting`
+- `procurement`, `supplier`, `supply`, `purchasing` → `procurement_supply_chain`
+- `hr`, `people`, `learning`, `capability`, `training` → `people_capability`
+- `customer`, `partner`, `regulator`, `auditor` → `external_stakeholders`
+
+Fallback default: `operations` or `data_reporting`.
+
+### 4) Layout: place nodes inside their cluster region (no physics library)
+
+Replace the circular positioning with a deterministic “cluster layout”:
+
+- Each cluster has a bounding box `{x, y, width, height}`.
+- Place nodes within a cluster using a simple grid layout (e.g. 2–4 columns depending on node count), with padding.
+- Keep node positions stable across renders given the same inputs.
+
+### 5) Render
+
+On `/map` (and optionally a smaller preview on `/twin`):
+
+- Draw cluster backgrounds + labels first
+- Draw edges next (simple straight lines is fine)
+- Draw nodes last (circles or rounded pills with labels)
+- Ensure text is readable and doesn’t overlap too badly; if needed, truncate node labels after ~22 chars.
+
+### 6) Keep everything else unchanged
+
+- Do NOT add new features beyond clustering/layout.
+- Do NOT add heavy graph libraries unless absolutely necessary.
+- Preserve guardrails, reset button, and localStorage.
+
+After implementing, confirm:
+
+- the map is no longer circular
+- nodes are grouped under organisational-function cluster regions
+- edges still render across clusters

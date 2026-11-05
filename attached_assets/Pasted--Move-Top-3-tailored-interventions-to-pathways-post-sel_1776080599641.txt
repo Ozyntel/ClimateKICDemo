@@ -1,0 +1,62 @@
+## Move “Top 3 tailored interventions” to /pathways (post-selection) + remove from /twin
+
+Migrate the “Top 3 interventions tailored to the chosen pathway” to the **/pathways** page and ensure the **Twin page no longer shows any interventions section**.
+
+### 1) Remove interventions from Twin
+
+- Remove/hide **any interventions-related section** from `/twin`, including:
+    - “Top 3 interventions”
+    - any “Interventions” preview cards
+    - any “Recommended interventions” blocks
+- Twin should not display interventions at all after this change.
+
+### 2) Remove from current location(s)
+
+- Remove/hide the “Top 3 interventions” section from wherever else it currently appears (Twin and/or Diagnostics), leaving only the full interventions list on `/diagnostics` if you still want it as a deep-dive.
+
+### 3) Add to /pathways (post-selection)
+
+On `/pathways`, after a user selects a pathway:
+
+- Display a new section directly underneath the selected pathway card (or under the Compare pathways area), titled:
+
+**“Recommended interventions for this pathway”**
+
+Behavior:
+
+- If **no pathway selected**:
+    - Show nothing OR show a small prompt: “Select a pathway to see tailored interventions.”
+- If a pathway **is selected**:
+    - Show **Top 3 interventions** prioritized for that pathway.
+
+### 4) Tailoring logic (must be pathway-specific)
+
+Prioritize interventions based on the selected pathway’s predicted bottlenecks/resistance:
+
+- Use predicted warnings (severity-sorted) for the selected pathway.
+- Rank interventions that mitigate the highest-severity warnings first.
+- If warnings are missing, fall back to baseline hotspots/missing info.
+
+### 5) Intervention card content (compact)
+
+Each of the Top 3 interventions shows:
+
+- Title
+- Targets (chips)
+- When to use (1 line)
+- First move (48h) (1 line)
+- Proof to collect (30d) (1 line)
+- “View full execution kit” expand toggle (optional)
+- If stub template drafting exists: keep “Draft template” buttons inside expanded view.
+
+Add a link/button:
+
+- **“View all interventions”** → `/diagnostics` and auto-expand interventions section (or open it).
+
+### 6) Verify
+
+- Twin page shows **no interventions**.
+- Select a pathway → interventions appear on /pathways and change with selection.
+- “View all interventions” works.
+
+After implementing, list the files changed and how to test end-to-end.

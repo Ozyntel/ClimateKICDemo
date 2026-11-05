@@ -1,0 +1,220 @@
+/* ============================================================
+   Disclaimer — Ozy design-system redesign.
+
+   Scoped under `.dc-ozy` (added alongside `.dc-page` on the
+   Disclaimer root) so it overrides the base `.dc-*` rules in
+   ozyntel-design.css without touching them. Same tokens as
+   the rest of the redesign — paper daylight ground, violet
+   accents, Bricolage / Figtree / DM Mono.
+   ============================================================ */
+
+.dc-ozy {
+  --dc-paper-0:    #FFFFFF;
+  --dc-paper-50:   #FAF7F0;
+  --dc-paper-100:  #F4EFE3;
+  --dc-line:       #E9E2D4;
+  --dc-line-strong:#D8CDBA;
+  --dc-ink-900:    #221E2E;
+  --dc-ink-700:    #453E54;
+  --dc-ink-500:    #6A6376;
+  --dc-ink-300:    #A29AB0;
+  --dc-violet-600: #6236E8;
+  --dc-violet-500: #7B4DFF;
+  --dc-violet-100: #ECE4FF;
+  --dc-violet-50:  #F6F2FF;
+  --dc-coral-500:  #FF5440;
+}
+
+/* ─── Page shell ─────────────────────────────────────────── */
+.dc-ozy.dc-page {
+  min-height: 100vh;
+  background: var(--dc-paper-50);
+  color: var(--dc-ink-900);
+  font-family: "Figtree", system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Top bar ────────────────────────────────────────────── */
+.dc-ozy .dc-topbar {
+  height: 60px;
+  padding: 0 20px;
+  background: var(--dc-paper-0);
+  border-bottom: 1px solid var(--dc-line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.dc-ozy .dc-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Bricolage Grotesque", serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--dc-violet-500);
+}
+.dc-ozy .dc-brand-mark { color: var(--dc-violet-500); }
+.dc-ozy .dc-brand-wm {
+  font-family: "Bricolage Grotesque", serif;
+  color: var(--dc-violet-500);
+  font-size: 20px;
+  letter-spacing: -0.01em;
+}
+.dc-ozy .dc-eyebrow {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--dc-ink-500);
+}
+
+/* ─── Main / card ────────────────────────────────────────── */
+.dc-ozy .dc-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+.dc-ozy .dc-card {
+  width: 100%;
+  max-width: 720px;
+  background: var(--dc-paper-0);
+  border: 1px solid var(--dc-line);
+  border-radius: 20px;
+  padding: 40px 44px 28px;
+  box-shadow:
+    0 1px 2px rgba(34, 30, 46, 0.04),
+    0 12px 40px rgba(34, 30, 46, 0.08);
+  color: var(--dc-ink-900);
+}
+
+/* ─── Head ───────────────────────────────────────────────── */
+.dc-ozy .dc-head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+.dc-ozy .dc-eyebrow-coral {
+  color: var(--dc-violet-500);
+}
+.dc-ozy .dc-h1 {
+  margin: 0;
+  font-family: "Bricolage Grotesque", serif;
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 1.1;
+  color: var(--dc-ink-900);
+  letter-spacing: -0.015em;
+}
+.dc-ozy .dc-h1 em {
+  font-style: italic;
+  color: var(--dc-violet-500);
+}
+
+/* ─── Body ───────────────────────────────────────────────── */
+.dc-ozy .dc-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  color: var(--dc-ink-700);
+  font-family: "Figtree", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  padding: 0;
+  max-height: none;
+  overflow: visible;
+}
+.dc-ozy .dc-body p,
+.dc-ozy .dc-section p {
+  margin: 0;
+  font-family: "Figtree", system-ui, sans-serif;
+  color: var(--dc-ink-700);
+}
+.dc-ozy .dc-lede {
+  font-family: "Figtree", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--dc-ink-900);
+}
+.dc-ozy .dc-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dc-ozy .dc-h3 {
+  margin: 0;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--dc-violet-500);
+  font-weight: 500;
+}
+.dc-ozy .dc-link {
+  color: var(--dc-violet-500);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+}
+.dc-ozy .dc-link:hover { color: var(--dc-violet-600); }
+.dc-ozy .dc-foot-note {
+  font-size: 12.5px;
+  color: var(--dc-ink-500);
+  padding-top: 10px;
+  border-top: 1px solid var(--dc-line);
+}
+
+/* ─── Footer buttons ─────────────────────────────────────── */
+.dc-ozy .dc-foot {
+  margin-top: 24px;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--dc-line);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.dc-ozy .dc-exit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  color: var(--dc-ink-500);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 999px;
+  transition: color 140ms, background 140ms;
+}
+.dc-ozy .dc-exit:hover {
+  color: var(--dc-ink-900);
+  background: var(--dc-paper-100);
+}
+.dc-ozy .dc-continue {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  background: var(--dc-violet-500);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 140ms, transform 100ms;
+}
+.dc-ozy .dc-continue:hover {
+  background: var(--dc-violet-600);
+  transform: translateY(-1px);
+}
+.dc-ozy .dc-continue:active { transform: scale(0.98); }

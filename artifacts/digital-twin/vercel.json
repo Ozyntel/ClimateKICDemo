@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": "dist/public",
+  "rewrites": [
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "functions": {
+    "api/sign-loi.ts": {
+      "maxDuration": 30
+    },
+    "api/submit-crm.ts": {
+      "maxDuration": 15
+    },
+    "api/prepare-unlock.ts": {
+      "maxDuration": 10
+    }
+  }
+}

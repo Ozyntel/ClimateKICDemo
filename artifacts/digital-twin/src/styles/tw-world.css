@@ -1,0 +1,57 @@
+/* ──────────────────────────────────────────────────────────────────────
+ * tw-world.css — chrome tokens + pseudo states for the /twin world map.
+ *
+ * The design handoff was authored against the Ozy DS bundle, whose chrome
+ * tokens (--surface-card, --ink-900, --violet-50, …) this app does not
+ * define under those names. We scope those exact tokens to `.tw-world`,
+ * mapped onto the app's Ozy fonts and sand/ink palette, so the ported
+ * inline styles resolve at high fidelity. Hover/focus states (which can't
+ * be inline) live here too.
+ * ────────────────────────────────────────────────────────────────────── */
+
+.tw-world {
+  --surface-page: #f4efe6;
+  --surface-card: #ffffff;
+  --surface-sunken: #f3eee4;
+  --border-default: #e6decf;
+  --ink-900: #171310;
+  --ink-700: #4a443b;
+  --text-body: #2a251f;
+  --text-secondary: #867c6d;
+  --text-muted: #a89e8d;
+  --violet-50: #f1ecff;
+  --coral-100: #fbddd5;
+  --warning-soft: #f7e6c6;
+  --warning: #8a5a00;
+  --radius-pill: 999px;
+  --shadow-raised: 0 14px 34px rgba(11, 16, 15, 0.16);
+  --font-display: var(--oz-font-display, "Bricolage Grotesque", "Trebuchet MS", sans-serif);
+  --font-body: var(--oz-font-body, "Figtree", system-ui, sans-serif);
+  --font-mono: var(--oz-font-mono, "DM Mono", ui-monospace, monospace);
+
+  font-family: var(--font-body);
+  color: var(--text-body);
+  background: var(--surface-page);
+}
+
+.tw-world *,
+.tw-world *::before,
+.tw-world *::after {
+  box-sizing: border-box;
+}
+
+/* Overlay controls on the dark map */
+.tw-world .tw-ctl:hover,
+.tw-world .tw-back:hover {
+  border-color: #f6f3ec;
+}
+
+/* Editable what-if textarea focus ring */
+.tw-world .tw-whatif:focus {
+  border-color: #d9f23a;
+}
+
+/* In-map popup close button */
+.tw-world .tw-popclose:hover {
+  background: var(--border-default);
+}

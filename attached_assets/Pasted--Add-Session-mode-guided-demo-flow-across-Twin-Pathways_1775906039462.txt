@@ -1,0 +1,68 @@
+## Add “Session mode” (guided demo flow) across Twin → Pathways → Map → DTO Brief
+
+Implement a **Session mode** to guide friendly-user demos. Keep it demo-safe: no auth, no DB, localStorage only.
+
+### 1) Data model
+
+Add to `Project`:
+
+```tsx
+session?: {
+	active: boolean
+	step: "twin" | "pathway" | "map" | "brief" | "done"
+	startedAt: string // ISO
+	completedAt?: string // ISO
+	ui: {
+		autoOpenPredictedBottlenecks?: boolean
+		collapsedSections?: Record<string, boolean>
+	}
+}
+```
+
+Persist this in the existing localStorage project key.
+
+### 2) Start / end controls
+
+- Add a **“Start session”** button on `/twin` (top of page).
+    - On click:
+        - set `session.active = true`
+        - set `session.step = "twin"`
+        - set `session.startedAt = now`
+        - set defaults that simplify the UI (collapse long sections, etc.)
+- Add a **“End session”** button visible when session is active (on all hub pages: `/twin`, `/pathways`, `/map`, `/diagnostics`, `/brief`).
+    - On click:
+        - set `session.step = "done"`
+        - set `session.completedAt = now`
+        - show a simple confirmation (“Session ended. Reset?”) with optional Reset action.
+- Add **“Reset session”** (separate from Reset project):
+    - clears only `project.session` state, keeps project data.
+
+### 3) Session progress indicator (persistent)
+
+When session is active, show a compact progress widget (top-right or under header):
+
+1. Twin review  
+2. Choose pathway  
+3. Review predicted bottlenecks (map)  
+4. Generate DTO brief  
+
+Highlight the current step. Each step is clickable (navigates) but enforce gating:
+
+- If no pathway selected, block navigation to map step (show tooltip: “Select a pathway first”).
+- If brief not generated yet, allow navigation but CTA suggests generating it.
+
+### 4) Guided CTAs per step
+
+When session is active, add a single prominent “Next” CTA per step:
+
+- Step `"twin"` on `/twin`:
+    - CTA: **“Next: Choose a pathway”** → `/pathways`
+- Step `"pathway"` on `/pathways`:
+    - If none selected: CTA disabled + hint “Select a pathway to continue”
+    - After selection: CTA **“Next: View predicted bottlenecks”** → `/map`
+    - Also set `session.step = "map"` after selection + navigation.
+- Step `"map"` on `/map`:
+    - Auto-expand the “Predicted bottlenecks” collapsible section (if it exists) and scroll it into view once.
+    - CTA: **“Next: Generate DTO brief”** → `/brief` (or trigger brief generation then navigate)
+- Step `"brief"` on `/brief`:
+    - CTA: **“Finish session”** → sets `session.step="done"` and shows “Copy brief” + “Reset session” buttons.
