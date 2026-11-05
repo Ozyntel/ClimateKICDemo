@@ -320,6 +320,13 @@ describe("Climate KIC — opening straight into the case (VITE_START_CASE)", () 
     expect(getActiveCaseId()).toBe(id);
   });
 
+  it("accepts the preset id as typed in a dashboard (\"Climate KIC\", \"climate_kic\")", async () => {
+    await applyStartCase(" Climate KIC ");
+    expect(getCase(getActiveCaseId())!.organisation.name).toBe("Climate KIC");
+    await applyStartCase("climate_kic");
+    expect(listCases()).toHaveLength(1);
+  });
+
   it("never replaces a case the team chose in /prepare", async () => {
     const mine = createCase("Team case");
     setActiveCaseId(mine.id);

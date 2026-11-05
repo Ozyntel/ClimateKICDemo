@@ -26,7 +26,7 @@ function fingerprint(text: string): string {
 }
 
 export async function applyStartCase(presetId: string | undefined): Promise<void> {
-  const id = (presetId ?? "").trim();
+  const id = (presetId ?? "").trim().toLowerCase().replace(/[\s_]+/g, "-"); // "Climate KIC" or "climate_kic" also mean "climate-kic"
   if (!id) return;
   try {
     const { DEMO_PRESETS, createCaseFromPreset } = await import("./presets");
