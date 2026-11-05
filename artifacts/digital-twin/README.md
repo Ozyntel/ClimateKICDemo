@@ -49,6 +49,10 @@ On Vercel, `api/*.ts` adapts each handler in `src/app/api/<name>/route.ts`. For 
 
 With `RESEND_API_KEY` or `EMAIL_FROM` missing, both email endpoints skip sending and still return `ok`.
 
+## Opening straight into one demo case
+
+A deployment dedicated to one demo case can skip the `/prepare` step: set the build variable `VITE_START_CASE` to a preset id (currently `climate-kic`). A browser with no case shown in the demo then gets that preset as its case on first visit, and a refreshed copy after the preset changes. A case the team chose in `/prepare` is never replaced. Leave it unset on demo.ozyntel.ai. Code: `src/lib/lead/startCase.ts`, called from `src/main.tsx`.
+
 ## Checks
 
 ```bash

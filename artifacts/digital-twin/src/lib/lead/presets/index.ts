@@ -5,7 +5,9 @@
  * editable case (a fresh id, like an import) — it never overwrites a case,
  * and it is not shown in the demo until the team clicks "Show in the demo".
  * Only /prepare imports this module; customer-facing pages read the active
- * case from storage like any other lead.
+ * case from storage like any other lead. The one exception is a dedicated
+ * deployment that sets VITE_START_CASE: startCase.ts (called from main.tsx)
+ * then loads this module dynamically to create that preset's case once.
  */
 import { importCaseJson } from "../store";
 import type { LeadCase } from "../types";
@@ -17,7 +19,7 @@ export const DEMO_PRESETS: DemoPreset[] = [
   {
     id: "climate-kic",
     label: "Climate KIC — growth decision (demonstration case)",
-    hint: "Public organisation context with a synthetic planning case: four fictional partners, six cohorts, three options, three SYNTHETIC source documents and two stress tests.",
+    hint: "Public organisation context with a synthetic planning case: four fictional partners, six cohorts, three pathways, four quick changes and three SYNTHETIC source documents.",
     data: CLIMATE_KIC_PRESET,
   },
 ];

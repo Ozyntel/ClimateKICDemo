@@ -123,6 +123,15 @@ describe("preview and test data isolation", () => {
     expect(prep.some((f) => f.endsWith(path.join("presets", "climateKic.ts")))).toBe(true);
   });
 
+  it("only main.tsx opens a start case, gated by VITE_START_CASE, and the presets load dynamically", () => {
+    const importers = all.filter((f) => !f.endsWith(".test.ts") && /from ["'][^"']*\/startCase["']/.test(fs.readFileSync(f, "utf8")));
+    expect(importers.map((f) => path.relative(SRC, f))).toEqual(["main.tsx"]);
+    expect(fs.readFileSync(path.join(SRC, "main.tsx"), "utf8")).toContain("applyStartCase(import.meta.env.VITE_START_CASE)");
+    const start = fs.readFileSync(path.join(SRC, "lib", "lead", "startCase.ts"), "utf8");
+    expect(start).not.toMatch(/from ["']\.\/presets/);
+    expect(start).toContain('await import("./presets")');
+  });
+
   it("the Climate KIC preset is marked as a demonstration with synthetic planning data", () => {
     const preset = fs.readFileSync(path.join(SRC, "lib", "lead", "presets", "climateKic.ts"), "utf8");
     expect(preset).toContain("DEMONSTRATION PRESET");

@@ -14,7 +14,8 @@ import { toWorldCase } from "./engineCase";
 import { activeStressTests, baselineLedger, ledgerCheckResults, pathwayLedger, toggleStressTest, type Ledger } from "./planning";
 import { buildBriefText } from "./brief";
 import { buildMapState, engineEffects, type MapStage } from "./mapState";
-import { applySource, getActiveCaseId, getProgress, listCases } from "./store";
+import { applySource, createCase, getActiveCaseId, getCase, getProgress, listCases, saveCase, setActiveCaseId } from "./store";
+import { applyStartCase } from "./startCase";
 import type { LeadCase, LeadProgress } from "./types";
 
 const lead: LeadCase = normaliseLeadCase(JSON.parse(JSON.stringify(CLIMATE_KIC_PRESET)));
@@ -295,6 +296,49 @@ describe("Climate KIC — creating the case from the preset", () => {
     expect(applySource(a.id, "CK-01")).toBe(true);
     expect(applySource(a.id, "CK-01")).toBe(false);
     expect(getProgress(a.id).appliedSources).toEqual(["CK-01"]);
+  });
+});
+
+describe("Climate KIC — opening straight into the case (VITE_START_CASE)", () => {
+  beforeEach(() => localStorage.clear());
+
+  it("does nothing without the setting or with an unknown preset", async () => {
+    await applyStartCase(undefined);
+    await applyStartCase("");
+    await applyStartCase("not-a-preset");
+    expect(listCases()).toEqual([]);
+    expect(getActiveCaseId()).toBeNull();
+  });
+
+  it("creates the Climate KIC case once per browser and shows it in the demo", async () => {
+    await applyStartCase("climate-kic");
+    const id = getActiveCaseId();
+    expect(getCase(id)!.organisation.name).toBe("Climate KIC");
+    expect(getCase(id)!.scenarios).toHaveLength(4);
+    await applyStartCase("climate-kic");
+    expect(listCases()).toHaveLength(1);
+    expect(getActiveCaseId()).toBe(id);
+  });
+
+  it("never replaces a case the team chose in /prepare", async () => {
+    const mine = createCase("Team case");
+    setActiveCaseId(mine.id);
+    await applyStartCase("climate-kic");
+    expect(getActiveCaseId()).toBe(mine.id);
+    expect(listCases()).toHaveLength(1);
+  });
+
+  it("replaces an outdated copy after the preset changes, starting with fresh demo progress", async () => {
+    await applyStartCase("climate-kic");
+    const old = getActiveCaseId()!;
+    saveCase({ ...getCase(old)!, internalLabel: "Start case · climate-kic · oldversion" });
+    applySource(old, "CK-01");
+    await applyStartCase("climate-kic");
+    const now = getActiveCaseId()!;
+    expect(now).not.toBe(old);
+    expect(getCase(old)).toBeNull();
+    expect(listCases()).toHaveLength(1);
+    expect(getProgress(now).appliedSources).toEqual([]);
   });
 });
 
